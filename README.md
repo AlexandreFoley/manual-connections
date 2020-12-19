@@ -1,3 +1,29 @@
+# Automation
+This fork contains the necessary script to automate the launching of openvpn using pia's scripts and sysrc
+As it is, it cannot automate wireguard, but most of the necessary work is likely done. And what's missing likely very similar to the modification already made.
+backup /usr/local/etc/rc.d/openvpn
+## Rough instructions
+make sure your jail is set up to allow tunnels.
+make sure that openvpn,jq,curl and base64 are installed
+
+All the .sh script are written to be in the same directory and be executed from it.
+On my system that directory is /root/manual-connections
+if you use a different directory you will have to edit the "cd" line run_setup.sh and openvpn_post.sh
+to change the directory that contain your copy of the scripts.
+
+move openvpn.rc to /usr/local/etc/rc.d/openvpn
+then set the following sysrc variables
+```
+sysrc openvpn_enable=YES
+sysrc openvpn_if=tun
+sysrc openvpn_configfile=/opt/piavpn-manual/pia.ovpn
+```
+write your PIA username and password in /usr/local/etx/openvpn/pass.txt with the format
+```
+<username>
+<password>
+```
+
 # Manual PIA VPN Connections
 
 ### This is a FreeBSD/FreeNAS fork of the original Linux scripts at https://github.com/pia-foss/manual-connections.  
