@@ -1,5 +1,4 @@
 #!/usr/local/bin/bash
-
 export PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/root/bin"
 
 printf "
@@ -62,4 +61,3 @@ echo "$bind_port_response"
     fi
     echo Port $port refreshed on $(date). \
       This port will expire $expires_at
-

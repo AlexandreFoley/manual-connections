@@ -21,17 +21,24 @@
 # SOFTWARE.
 
 # Only allow script to run as
+cd /root/manual-connections/
 echo "
 ################################
     run_setup.sh
 ################################
 "
+SYSRC_CALL=$1
+if [[ $SYSRC_CALL != "true" ]]; then
+	SYSRC_CALL="false"
+fi
 
+echo "sysrc set"
 if [ "$(whoami)" != "root" ]; then
   echo "This script needs to be run as root. Try again with 'sudo $0'"
   exit 1
 fi
-
+##changing the current directory to the location were the other pia script are found
+echo "who am i done"
 # Hardcoding all the settings to make testing (and using!) easier
 
 # Fetching credentials from local pass.txt file
@@ -55,5 +62,6 @@ PIA_PF="true"
 export PIA_PF
 MAX_LATENCY=0.1
 export MAX_LATENCY
+export SYSRC_CALL
 
 ./get_region_and_token.sh

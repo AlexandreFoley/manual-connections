@@ -24,6 +24,7 @@ echo "
     get_region_and_token.sh
 ################################
 "
+export PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/root/bin"
 
 # This function allows you to check if the required tools have been installed.
 function check_tool() {
@@ -207,12 +208,21 @@ if [[ $PIA_AUTOCONNECT == openvpn* ]]; then
   echo   CONNECTION_SETTINGS=$PIA_AUTOCONNECT \\
   echo   ./connect_to_openvpn_with_token.sh
   echo
+  if [[ "$SYSRC_CALL" == "true" ]]; then
+  echo "sysrc mode"
+  PIA_PF=$PIA_PF PIA_TOKEN="$token" \
+    OVPN_SERVER_IP=$serverIP \
+    OVPN_HOSTNAME=$serverHostname \
+    CONNECTION_SETTINGS=$PIA_AUTOCONNECT \
+    ./openvpn_pre.sh
+  else
   PIA_PF=$PIA_PF PIA_TOKEN="$token" \
     OVPN_SERVER_IP=$serverIP \
     OVPN_HOSTNAME=$serverHostname \
     CONNECTION_SETTINGS=$PIA_AUTOCONNECT \
     ./connect_to_openvpn_with_token.sh
   exit 0
+  fi
 fi
 
 echo If you wish to automatically connect to the VPN after detecting the best
