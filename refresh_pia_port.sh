@@ -31,8 +31,8 @@ webuiPort=8080
 printf "username ${username}, webui port: ${webuiPort}, webui found at ${torrenthost}"
 ##qbittorrent
 rm cookies.txt
-curl -c cookies.txt -i --header 'Referer: http://localhost:'"$webuiPort" --data 'username='"$username"'&password='"$password" http://localhost:$webuiPort/api/v2/auth/login
-curl -b cookies.txt  --data 'json={"listen_port":'"$PORT"'}' http://localhost:$webuiPort/api/v2/app/setPreferences
+curl -c cookies.txt -i --header 'Referer: http://localhost:8080' --data 'username='"$username"'&password='"$password" http://localhost:8080/api/v2/auth/login
+curl -b cookies.txt  --data 'json={"listen_port":'"$port"'}' http://localhost:8080/api/v2/app/setPreferences
 rm cookies.txt
 ##\for qbittorrent
 
