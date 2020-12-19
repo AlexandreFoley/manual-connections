@@ -5,7 +5,7 @@ export PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/root/
 printf "
 #############################
     refresh_pia_port.sh
-############################# \n\n"
+############################# \n\n"a
 
 # Retrieve variables
 pf_filepath=/opt/piavpn-manual/pf
@@ -26,14 +26,14 @@ echo expires_at: $expires_at
 printf  "Sending port# to torrent client.\n\n"
 #transmission-remote -p $port #for transmission
 ##for qbittorrent
-webuiPort=8080
 source /root/webuipassword.txt # format username=admin\npassword=adminadmin
-torrenthost=localhost
+webuiPort=8080
 printf "username ${username}, webui port: ${webuiPort}, webui found at ${torrenthost}"
-rm -f /tmp/.cookies.txt
-curl -s -b /tmp/.cookies.txt -c /tmp/.cookies.txt --header "Referer: http://localhost:8080" --data "username=${username}&password=${password}" http://${torrenthost}:${webuiPort}/api/v2/auth/login
-curl -s -b /tmp/.cookies.txt -c /tmp/.cookies.txt "http://${torrenthost}:${webuiPort}/api/v2/app/setPreferences" -d 'json={"listen_port": "'"$PORT"'"}'
-rm -f /tmp/.cookies.txt 
+##qbittorrent
+rm cookies.txt
+curl -c cookies.txt -i --header 'Referer: http://localhost:'"$webuiPort" --data 'username='"$username"'&password='"$password" http://localhost:$webuiPort/api/v2/auth/login
+curl -b cookies.txt  --data 'json={"listen_port":'"$PORT"'}' http://localhost:$webuiPort/api/v2/app/setPreferences
+rm cookies.txt
 ##\for qbittorrent
 
 printf "\nTrying to bind the port . . . \n"
