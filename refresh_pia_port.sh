@@ -23,8 +23,18 @@ echo signature: $signature
 echo port: $port
 echo expires_at: $expires_at
 
-printf  "Sending port# to transmission-remote.\n\n"
-transmission-remote -p $port
+printf  "Sending port# to torrent client.\n\n"
+#transmission-remote -p $port #for transmission
+##for qbittorrent
+webuiPort=8080
+source /root/webuipassword.txt # format username=admin\npassword=adminadmin
+torrenthost=localhost
+printf "username ${username}, webui port: ${webuiPort}, webui found at ${torrenthost}"
+rm -f /tmp/.cookies.txt
+curl -s -b /tmp/.cookies.txt -c /tmp/.cookies.txt --header "Referer: http://localhost:8080" --data "username=${username}&password=${password}" http://${torrenthost}:${webuiPort}/api/v2/auth/login
+curl -s -b /tmp/.cookies.txt -c /tmp/.cookies.txt "http://${torrenthost}:${webuiPort}/api/v2/app/setPreferences" -d 'json={"listen_port": "'"$PORT"'"}'
+rm -f /tmp/.cookies.txt 
+##\for qbittorrent
 
 printf "\nTrying to bind the port . . . \n"
 
@@ -32,10 +42,11 @@ printf "\nTrying to bind the port . . . \n"
 # Set a cron job to run this script every 15 minutes, to keep the port
 # alive. The servers have no mechanism to track your activity, so they
 # will just delete the port forwarding if you don't send keepalives.
-
+# the cacert path can be tricky depending on where you're calling the script from.
+#best put the full absolute path to it.
   bind_port_response="$(curl -Gs -m 5 \
     --connect-to "$PF_HOSTNAME::$PF_GATEWAY:" \
-    --cacert "/pia/ca.rsa.4096.crt" \
+    --cacert "/root/manual-connections/ca.rsa.4096.crt" \
     --data-urlencode "payload=${payload}" \
     --data-urlencode "signature=${signature}" \
     "https://${PF_HOSTNAME}:19999/bindPort")"
